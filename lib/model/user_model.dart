@@ -1,76 +1,87 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-class User {
-  final String id;
-  final String email;
-  final String displayName;
-  final String photoUrl;
-  User({
-    required this.id,
-    required this.email,
-    required this.displayName,
-    required this.photoUrl,
-  });
+import 'package:firebase_auth/firebase_auth.dart';
 
+class UserModel {
+  String uId;
+  String name;
+  String email;
+  DateTime dateOfBirth;
+  String password;
+
+  UserModel({
+    required this.uId,
+    required this.name,
+    required this.email,
+    required this.dateOfBirth,
+    required this.password,
+  });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'id': id,
+      'uId': uId,
+      'name': name,
       'email': email,
-      'displayName': displayName,
-      'photoUrl': photoUrl,
+      'dateOfBirth': dateOfBirth.millisecondsSinceEpoch,
+      'password': password,
     };
   }
 
-  factory User.fromMap(Map<String, dynamic> map) {
-    return User(
-      id: map['id'] as String,
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
+      uId: map['uId'] as String,
+      name: map['name'] as String,
       email: map['email'] as String,
-      displayName: map['displayName'] as String,
-      photoUrl: map['photoUrl'] as String,
+      dateOfBirth: DateTime.fromMillisecondsSinceEpoch(map['dateOfBirth'] as int),
+      password: map['password'] as String,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory User.fromJson(String source) => User.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory UserModel.fromJson(String source) => UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
-  User copyWith({
-    String? id,
+  UserModel copyWith({
+    String? uId,
+    String? name,
     String? email,
-    String? displayName,
-    String? photoUrl,
+    DateTime? dateOfBirth,
+    String? password,
   }) {
-    return User(
-      id: id ?? this.id,
+    return UserModel(
+      uId: uId ?? this.uId,
+      name: name ?? this.name,
       email: email ?? this.email,
-      displayName: displayName ?? this.displayName,
-      photoUrl: photoUrl ?? this.photoUrl,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      password: password ?? this.password,
     );
   }
 
   @override
   String toString() {
-    return 'User(id: $id, email: $email, displayName: $displayName, photoUrl: $photoUrl)';
+    return 'UserModel(uId: $uId, name: $name, email: $email, dateOfBirth: $dateOfBirth, password: $password)';
   }
 
   @override
-  bool operator ==(covariant User other) {
+  bool operator ==(covariant UserModel other) {
     if (identical(this, other)) return true;
   
     return 
-      other.id == id &&
+      other.uId == uId &&
+      other.name == name &&
       other.email == email &&
-      other.displayName == displayName &&
-      other.photoUrl == photoUrl;
+      other.dateOfBirth == dateOfBirth &&
+      other.password == password;
   }
 
   @override
-  int get hashCode {
-    return id.hashCode ^
+  int get hashCode => uId.hashCode ^
+      name.hashCode ^
       email.hashCode ^
-      displayName.hashCode ^
-      photoUrl.hashCode;
+      dateOfBirth.hashCode ^
+      password.hashCode;
+
+      static UserModel? fromFirebaseUser(User user){
   }
 }
