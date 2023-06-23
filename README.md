@@ -21,7 +21,8 @@ Jobdesc:
 
 Flowchart:
 
-![Flowchart Diagram HealthHub](https://github.com/eunannana/HealthHub/blob/main/Flowchart%20Diagram%20HealthHub.jpg)
+![Flowchart Diagram HealthHub](https://github.com/eunannana/HealthHub/assets/94947950/73b8d219-d421-4bb6-8ed7-9c9f61f60384)
+
 
 Usecase Diagram:
 
