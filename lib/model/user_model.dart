@@ -1,13 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:firebase_auth/firebase_auth.dart';
-
 class UserModel {
   String uId;
   String uName;
   String uEmail;
-  DateTime uDateOfBirth;
+  String uDateOfBirth;
   String uGender;
 
   UserModel({
@@ -23,7 +21,7 @@ class UserModel {
       'uId': uId,
       'uName': uName,
       'uEmail': uEmail,
-      'uDateOfBirth': uDateOfBirth.millisecondsSinceEpoch,
+      'uDateOfBirth': uDateOfBirth,
       'uGender': uGender,
     };
   }
@@ -33,7 +31,7 @@ class UserModel {
       uId: map['uId'] as String,
       uName: map['uName'] as String,
       uEmail: map['uEmail'] as String,
-      uDateOfBirth: DateTime.fromMillisecondsSinceEpoch(map['uDateOfBirth'] as int),
+      uDateOfBirth: map['uDateOfBirth'] as String,
       uGender: map['uGender'] as String,
     );
   }
@@ -46,7 +44,7 @@ class UserModel {
     String? uId,
     String? uName,
     String? uEmail,
-    DateTime? uDateOfBirth,
+    String? uDateOfBirth,
     String? uGender,
   }) {
     return UserModel(
@@ -82,8 +80,5 @@ class UserModel {
       uEmail.hashCode ^
       uDateOfBirth.hashCode ^
       uGender.hashCode;
-  }
-
-      static UserModel? fromFirebaseUser(User user){
   }
 }

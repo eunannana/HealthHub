@@ -1,10 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:healthhub/controller/auth_controller.dart';
 import 'package:healthhub/model/user_model.dart';
 
 class RegisterView extends StatefulWidget {
-  RegisterView({super.key});
+  RegisterView({Key? key}) : super(key: key);
 
   @override
   State<RegisterView> createState() => _RegisterViewState();
@@ -12,34 +14,16 @@ class RegisterView extends StatefulWidget {
 
 class _RegisterViewState extends State<RegisterView> {
   final formkey = GlobalKey<FormState>();
-
   final userCr = AuthController();
-
-  final List<String> genderOptions = ['Male', 'Female']; 
+  final List<String> genderOptions = ['Male', 'Female'];
+  String? name;
+  String? email;
+  String? password;
+  String? gender;
+  String? dob;
 
   @override
   Widget build(BuildContext context) {
-    String? name;
-    String? email;
-    String? password;
-    DateTime? dob;
-    String? gender;
-
-
-    Future<void> selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    );
-    if (picked != null && picked != dob) {
-      setState(() {
-        dob = picked;
-      });
-    }
-  }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Register'),
@@ -63,7 +47,6 @@ class _RegisterViewState extends State<RegisterView> {
                     return null;
                   },
                 ),
-              
                 TextFormField(
                   decoration: const InputDecoration(hintText: 'Email'),
                   onChanged: (value) {
@@ -73,16 +56,17 @@ class _RegisterViewState extends State<RegisterView> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email.';
                     }
-                    if (!RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
+                    if (!RegExp(
+                            r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
                         .hasMatch(value)) {
                       return 'Please enter a valid email address.';
                     }
                     return null;
                   },
                 ),
-               DropdownButtonFormField<String>(
+                DropdownButtonFormField<String>(
                   decoration: const InputDecoration(hintText: 'Gender'),
-                  value: gender, // Nilai gender yang dipilih
+                  value: gender,
                   onChanged: (value) {
                     gender = value;
                   },
@@ -103,7 +87,7 @@ class _RegisterViewState extends State<RegisterView> {
                   leading: const Icon(Icons.calendar_today),
                   title: Text(
                     dob != null
-                        ? DateFormat('dd MMMM yyyy').format(dob!)
+                        ? DateFormat('dd MMMM yyyy').format(DateTime.parse(dob!))
                         : 'Select Date of Birth',
                   ),
                   onTap: () {
@@ -136,7 +120,6 @@ class _RegisterViewState extends State<RegisterView> {
                             await userCr.createUserWithEmailAndPassword(
                                 email!, password!, name!, dob!, gender!);
                         if (registeredUser != null) {
-                          // Tampilkan dialog "Registration Successful"
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -157,7 +140,6 @@ class _RegisterViewState extends State<RegisterView> {
                           );
                         }
                       } catch (e) {
-                        // Tangkap dan tampilkan pesan jika email sudah didaftarkan
                         if (e
                             .toString()
                             .contains('Email is already registered')) {
@@ -180,7 +162,6 @@ class _RegisterViewState extends State<RegisterView> {
                             },
                           );
                         } else {
-                          // Tampilkan dialog "Registration Failed" untuk kesalahan lainnya
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -211,5 +192,19 @@ class _RegisterViewState extends State<RegisterView> {
         ),
       ),
     );
+  }
+
+  Future<void> selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        dob = DateFormat('yyyy-MM-dd').format(picked);
+      });
+    }
   }
 }

@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:healthhub/model/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -9,7 +8,7 @@ class AuthController {
       FirebaseFirestore.instance.collection('users');
 
   Future<UserModel?> createUserWithEmailAndPassword(String email,
-      String password, String name, DateTime dob, String gender) async {
+      String password, String name, String dob, String gender) async {
     try {
       final QuerySnapshot snapshot = await usersCollection
           .where('uEmail', isEqualTo: email)

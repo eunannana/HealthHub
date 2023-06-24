@@ -1,30 +1,33 @@
-import 'package:firebase_auth/firebase_auth.dart';
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:healthhub/view/register.dart';
 import 'package:healthhub/controller/auth_controller.dart';
 
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-  AuthController _authController = AuthController();
+  final AuthController _authController = AuthController();
 
   Future<void> _showLoginSuccessfulDialog() async {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Success'),
-          content: Text('Login Successful.'),
+          title: const Text('Success'),
+          content: const Text('Login Successful.'),
           actions: [
             TextButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -39,23 +42,23 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: const Text('Login'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
               controller: _emailController,
-              decoration: InputDecoration(labelText: 'Email'),
+              decoration: const InputDecoration(labelText: 'Email'),
             ),
             TextField(
               controller: _passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
+              decoration: const InputDecoration(labelText: 'Password'),
               obscureText: true,
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
                 String email = _emailController.text;
@@ -69,11 +72,11 @@ class _LoginPageState extends State<LoginPage> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Error'),
-                          content: Text('Invalid email or password.'),
+                          title: const Text('Error'),
+                          content: const Text('Invalid email or password.'),
                           actions: [
                             TextButton(
-                              child: Text('OK'),
+                              child: const Text('OK'),
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
@@ -85,9 +88,9 @@ class _LoginPageState extends State<LoginPage> {
                   }
                 });
               },
-              child: Text('Login'),
+              child: const Text('Login'),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextButton(
               onPressed: () {
                 Navigator.push(
@@ -95,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                   MaterialPageRoute(builder: (context) => RegisterView()),
                 );
               },
-              child: Text("Don't have an account? Register"),
+              child: const Text("Don't have an account? Register"),
             ),
           ],
         ),
