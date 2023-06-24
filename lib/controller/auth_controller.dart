@@ -1,35 +1,50 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:healthhub/model/user_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthController {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final CollectionReference usersCollection =
+      FirebaseFirestore.instance.collection('users');
 
-  Future<User?> signUp(UserModel user) async {
+  Future<UserModel?> createUserWithEmailAndPassword(
+      String email, String password, String name, DateTime dob, String gender) async {
     try {
-      UserCredential result = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: user.email,
-        password: user.password,
+       final QuerySnapshot snapshot = await usersCollection
+          .where('uEmail', isEqualTo: email)
+          .limit(1)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        throw Exception('Email is already registered');
+      }
+      final UserCredential userCredential = await auth.createUserWithEmailAndPassword(email: email,
+      password: password,
       );
-      User? firebaseUser = result.user;
+      final User? user = userCredential.user;
       
       // Update user profile with display name
-      if (firebaseUser != null) {
-        await firebaseUser.updateDisplayName(user.name);
+       if (user != null) {
+        final UserModel newUser =
+            UserModel(uName: name, uEmail: user.email ?? '', uId: user.uid, uDateOfBirth: dob, uGender: gender);
+        await usersCollection.doc(newUser.uId).set(newUser.toMap());
+        return newUser;
       }
-
-      return firebaseUser;
     } catch (e) {
-      print(e.toString());
-      return null;
+      print('Error registering user: $e');
+    }
+    return null;
     }
   }
-  Future<User?> signIn(String email, String password) async {
+  
+  Future<User?> signInWithEmailAndPassword(String email, String password) async {
     try {
-      UserCredential result = await _firebaseAuth.signInWithEmailAndPassword(
+      
+      final UserCredential userCredential = await auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      User? firebaseUser = result.user;
+      User? firebaseUser = userCredential.user;
 
       return firebaseUser;
     } catch (e) {
@@ -37,4 +52,6 @@ class AuthController {
       return null;
     }
   }
-}
+  
+  
+

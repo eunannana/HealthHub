@@ -5,36 +5,36 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class UserModel {
   String uId;
-  String name;
-  String email;
-  DateTime dateOfBirth;
-  String password;
+  String uName;
+  String uEmail;
+  DateTime uDateOfBirth;
+  String uGender;
 
   UserModel({
     required this.uId,
-    required this.name,
-    required this.email,
-    required this.dateOfBirth,
-    required this.password,
+    required this.uName,
+    required this.uEmail,
+    required this.uDateOfBirth,
+    required this.uGender,
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'uId': uId,
-      'name': name,
-      'email': email,
-      'dateOfBirth': dateOfBirth.millisecondsSinceEpoch,
-      'password': password,
+      'uName': uName,
+      'uEmail': uEmail,
+      'uDateOfBirth': uDateOfBirth.millisecondsSinceEpoch,
+      'uGender': uGender,
     };
   }
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
       uId: map['uId'] as String,
-      name: map['name'] as String,
-      email: map['email'] as String,
-      dateOfBirth: DateTime.fromMillisecondsSinceEpoch(map['dateOfBirth'] as int),
-      password: map['password'] as String,
+      uName: map['uName'] as String,
+      uEmail: map['uEmail'] as String,
+      uDateOfBirth: DateTime.fromMillisecondsSinceEpoch(map['uDateOfBirth'] as int),
+      uGender: map['uGender'] as String,
     );
   }
 
@@ -44,23 +44,23 @@ class UserModel {
 
   UserModel copyWith({
     String? uId,
-    String? name,
-    String? email,
-    DateTime? dateOfBirth,
-    String? password,
+    String? uName,
+    String? uEmail,
+    DateTime? uDateOfBirth,
+    String? uGender,
   }) {
     return UserModel(
       uId: uId ?? this.uId,
-      name: name ?? this.name,
-      email: email ?? this.email,
-      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
-      password: password ?? this.password,
+      uName: uName ?? this.uName,
+      uEmail: uEmail ?? this.uEmail,
+      uDateOfBirth: uDateOfBirth ?? this.uDateOfBirth,
+      uGender: uGender ?? this.uGender,
     );
   }
 
   @override
   String toString() {
-    return 'UserModel(uId: $uId, name: $name, email: $email, dateOfBirth: $dateOfBirth, password: $password)';
+    return 'UserModel(uId: $uId, uName: $uName, uEmail: $uEmail, uDateOfBirth: $uDateOfBirth, uGender: $uGender)';
   }
 
   @override
@@ -69,18 +69,20 @@ class UserModel {
   
     return 
       other.uId == uId &&
-      other.name == name &&
-      other.email == email &&
-      other.dateOfBirth == dateOfBirth &&
-      other.password == password;
+      other.uName == uName &&
+      other.uEmail == uEmail &&
+      other.uDateOfBirth == uDateOfBirth &&
+      other.uGender == uGender;
   }
 
   @override
-  int get hashCode => uId.hashCode ^
-      name.hashCode ^
-      email.hashCode ^
-      dateOfBirth.hashCode ^
-      password.hashCode;
+  int get hashCode {
+    return uId.hashCode ^
+      uName.hashCode ^
+      uEmail.hashCode ^
+      uDateOfBirth.hashCode ^
+      uGender.hashCode;
+  }
 
       static UserModel? fromFirebaseUser(User user){
   }
