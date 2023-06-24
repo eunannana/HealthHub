@@ -23,4 +23,18 @@ class AuthController {
       return null;
     }
   }
+  Future<User?> signIn(String email, String password) async {
+    try {
+      UserCredential result = await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      User? firebaseUser = result.user;
+
+      return firebaseUser;
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
 }
