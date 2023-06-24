@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:healthhub/model/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -58,4 +59,5 @@ class AuthController {
       return null;
     }
   }
+  
 }

@@ -61,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
                 String email = _emailController.text;
                 String password = _passwordController.text;
 
-                _authController.signIn(email, password).then((result) {
+                _authController.signInWithEmailAndPassword(email, password).then((result) {
                   if (result != null) {
                     _showLoginSuccessfulDialog();
                   } else {
@@ -92,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => RegisterPage()),
+                  MaterialPageRoute(builder: (context) => RegisterView()),
                 );
               },
               child: Text("Don't have an account? Register"),
