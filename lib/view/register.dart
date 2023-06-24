@@ -85,13 +85,13 @@ class _RegisterPageState extends State<RegisterPage> {
                 if (_passwordController.text == _confirmPasswordController.text) {
                   UserModel user = UserModel(
                     uId: '',
-                    name: _nameController.text,
-                    email: _emailController.text,
-                    dateOfBirth: _selectedDate,
-                    password: _passwordController.text,
+                    uName: _nameController.text,
+                    uEmail: _emailController.text,
+                    uDateOfBirth: _selectedDate,
+                  
                   );
 
-                  _authController.signUp(user).then((result) {
+                  _authController.createUserWithEmailAndPassword(user).then((result) {
                     if (result != null) {
                 showDialog(
                           context: context,
