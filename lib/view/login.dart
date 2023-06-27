@@ -11,12 +11,12 @@ class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
-
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   final AuthController _authController = AuthController();
+  bool _hidePassword = true;
 
   Future<void> _showLoginSuccessfulDialog() async {
     return showDialog(
@@ -55,8 +55,20 @@ class _LoginPageState extends State<LoginPage> {
             ),
             TextField(
               controller: _passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
+              decoration: InputDecoration(
+                labelText: 'Password',
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _hidePassword = !_hidePassword;
+                    });
+                  },
+                  icon: Icon(
+                    _hidePassword ? Icons.visibility_off : Icons.visibility,
+                  ),
+                ),
+              ),
+              obscureText: _hidePassword,
             ),
             const SizedBox(height: 16.0),
             ElevatedButton(
