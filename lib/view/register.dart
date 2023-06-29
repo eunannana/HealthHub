@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:healthhub/controller/auth_controller.dart';
 import 'package:healthhub/model/user_model.dart';
+import 'package:healthhub/view/login.dart';
 
 class RegisterView extends StatefulWidget {
   RegisterView({Key? key}) : super(key: key);
@@ -214,7 +215,8 @@ class _RegisterViewState extends State<RegisterView> {
                                   actions: <Widget>[
                                     TextButton(
                                       onPressed: () {
-                                        Navigator.pop(context);
+                                        Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => const LoginPage()));
                                       },
                                       child: const Text('OK'),
                                     ),
@@ -282,7 +284,7 @@ class _RegisterViewState extends State<RegisterView> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(1950), // Batas awal pemilihan tahun
+      firstDate: DateTime.now(), // Batas awal pemilihan tahun
       lastDate: DateTime.now(),
     );
     if (picked != null) {

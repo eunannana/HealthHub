@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:healthhub/view/register.dart';
 import 'package:healthhub/view/login.dart';
+import 'package:healthhub/view/splash.dart';
 
 Future main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,11 +19,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        
-        primarySwatch: Colors.blue,
+        colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 225, 125, 25)),
+        useMaterial3: true,
       ),
-      home: const LoginPage(),
-      // home: const RegisterView(),
+      home: const SplashScreen(),
+      debugShowCheckedModeBanner: false,
+      
     );
   }
 }

@@ -7,6 +7,16 @@ class UserModel {
   String uEmail;
   String uDateOfBirth;
   String uGender;
+  int? uHydrateValue;
+  int? uHydratePoint;
+  int? uCalorieValue;
+  int? uCaloriePoint;
+  int? uExerciseValue;
+  int? uExercisePoint;
+  int? uSleepValue;
+  int? uSleepPoint;
+  int? uSuccessPoint;
+  
 
   UserModel({
     required this.uId,
@@ -14,6 +24,15 @@ class UserModel {
     required this.uEmail,
     required this.uDateOfBirth,
     required this.uGender,
+    this.uHydrateValue,
+    this.uHydratePoint,
+    this.uCalorieValue,
+    this.uCaloriePoint,
+    this.uExerciseValue,
+    this.uExercisePoint,
+    this.uSleepValue,
+    this.uSleepPoint,
+    this.uSuccessPoint,
   });
 
   Map<String, dynamic> toMap() {
@@ -23,6 +42,15 @@ class UserModel {
       'uEmail': uEmail,
       'uDateOfBirth': uDateOfBirth,
       'uGender': uGender,
+      'uHydrateValue': uHydrateValue,
+      'uHydratePoint': uHydratePoint,
+      'uCalorieValue': uCalorieValue,
+      'uCaloriePoint': uCaloriePoint,
+      'uExerciseValue': uExerciseValue,
+      'uExercisePoint': uExercisePoint,
+      'uSleepValue': uSleepValue,
+      'uSleepPoint': uSleepPoint,
+      'uSuccessPoint': uSuccessPoint,
     };
   }
 
@@ -33,6 +61,15 @@ class UserModel {
       uEmail: map['uEmail'] as String,
       uDateOfBirth: map['uDateOfBirth'] as String,
       uGender: map['uGender'] as String,
+      uHydrateValue: map['uHydrateValue']?.toInt(),
+      uHydratePoint: map['uHydratePoint']?.toInt(),
+      uCalorieValue: map['uCalorieValue']?.toInt(),
+      uCaloriePoint: map['uCaloriePoint']?.toInt(),
+      uExerciseValue: map['uExerciseValue']?.toInt(),
+      uExercisePoint: map['uExercisePoint']?.toInt(),
+      uSleepValue: map['uSleepValue']?.toInt(),
+      uSleepPoint: map['uSleepPoint']?.toInt(),
+      uSuccessPoint: map['uSuccessPoint']?.toInt(),
     );
   }
 
@@ -46,6 +83,15 @@ class UserModel {
     String? uEmail,
     String? uDateOfBirth,
     String? uGender,
+     int? uHydrateValue,
+    int? uHydratePoint,
+    int? uCalorieValue,
+    int? uCaloriePoint,
+    int? uExerciseValue,
+    int? uExercisePoint,
+    int? uSleepValue,
+    int? uSleepPoint,
+    int? uSuccessPoint,
   }) {
     return UserModel(
       uId: uId ?? this.uId,
@@ -53,12 +99,21 @@ class UserModel {
       uEmail: uEmail ?? this.uEmail,
       uDateOfBirth: uDateOfBirth ?? this.uDateOfBirth,
       uGender: uGender ?? this.uGender,
+      uHydrateValue: uHydrateValue ?? this.uHydrateValue,
+      uHydratePoint: uHydratePoint ?? this.uHydratePoint,
+      uCalorieValue: uCalorieValue ?? this.uCalorieValue,
+      uCaloriePoint: uCaloriePoint ?? this.uCaloriePoint,
+      uExerciseValue: uExerciseValue ?? this.uExerciseValue,
+      uExercisePoint: uExercisePoint ?? this.uExercisePoint,
+      uSleepValue: uSleepValue ?? this.uSleepValue,
+      uSleepPoint: uSleepPoint ?? this.uSleepPoint,
+      uSuccessPoint: uSuccessPoint ?? this.uSuccessPoint,
     );
   }
 
   @override
   String toString() {
-    return 'UserModel(uId: $uId, uName: $uName, uEmail: $uEmail, uDateOfBirth: $uDateOfBirth, uGender: $uGender)';
+    return 'UserModel(uId: $uId, uName: $uName, uEmail: $uEmail, uDateOfBirth: $uDateOfBirth, uGender: $uGender, uHydrateValue: $uHydrateValue, uHydratePoint: $uHydratePoint, uCalorieValue: $uCalorieValue, uCaloriePoint: $uCaloriePoint, uExerciseValue: $uExerciseValue, uExercisePoint: $uExercisePoint, uSleepValue: $uSleepValue, uSleepPoint: $uSleepPoint, uSuccessPoint: $uSuccessPoint)';
   }
 
   @override
@@ -70,7 +125,16 @@ class UserModel {
       other.uName == uName &&
       other.uEmail == uEmail &&
       other.uDateOfBirth == uDateOfBirth &&
-      other.uGender == uGender;
+      other.uGender == uGender&&
+      other.uHydrateValue == uHydrateValue &&
+      other.uHydratePoint == uHydratePoint &&
+      other.uCalorieValue == uCalorieValue &&
+      other.uCaloriePoint == uCaloriePoint &&
+      other.uExerciseValue == uExerciseValue &&
+      other.uExercisePoint == uExercisePoint &&
+      other.uSleepValue == uSleepValue &&
+      other.uSleepPoint == uSleepPoint &&
+      other.uSuccessPoint == uSuccessPoint;;
   }
 
   @override
@@ -79,6 +143,16 @@ class UserModel {
       uName.hashCode ^
       uEmail.hashCode ^
       uDateOfBirth.hashCode ^
-      uGender.hashCode;
+      uGender.hashCode ^
+      uHydrateValue.hashCode ^
+      uHydratePoint.hashCode ^
+      uCalorieValue.hashCode ^
+      uCaloriePoint.hashCode ^
+      uExerciseValue.hashCode ^
+      uExercisePoint.hashCode ^
+      uSleepValue.hashCode ^
+      uSleepPoint.hashCode ^
+      uSuccessPoint.hashCode;
+      
   }
 }

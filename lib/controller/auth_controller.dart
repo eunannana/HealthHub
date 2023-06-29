@@ -42,21 +42,27 @@ class AuthController {
     return null;
   }
 
-  Future<User?> signInWithEmailAndPassword(
+Future<UserModel?> signInWithEmailAndPassword(
       String email, String password) async {
     try {
-      final UserCredential userCredential =
-          await auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      User? firebaseUser = userCredential.user;
+      final UserCredential userCredential = await auth
+          .signInWithEmailAndPassword(email: email, password: password);
+      final User? user = userCredential.user;
 
-      return firebaseUser;
+      if (user != null) {
+        final DocumentSnapshot snapshot =
+            await usersCollection.doc(user.uid).get();
+
+        if (snapshot.exists) {
+          final UserModel loggedInUser =
+              UserModel.fromMap(snapshot.data() as Map<String, dynamic>);
+          return loggedInUser;
+        }
+      }
     } catch (e) {
-      print(e.toString());
-      return null;
+      print('Error logging in: $e');
     }
+    return null;
   }
   
 }
