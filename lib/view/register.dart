@@ -284,7 +284,7 @@ class _RegisterViewState extends State<RegisterView> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime.now(), // Batas awal pemilihan tahun
+      firstDate: DateTime(1900),
       lastDate: DateTime.now(),
     );
     if (picked != null) {
