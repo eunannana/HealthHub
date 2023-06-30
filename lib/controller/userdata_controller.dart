@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserDataController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  
+
   Future<Map<String, dynamic>> getDailySuccessPoint(
       String userId, String date) async {
     try {
@@ -24,5 +24,26 @@ class UserDataController {
     }
 
     return {};
+  }
+
+  Future<int> getGlobalRank(String userId) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .orderBy('uSuccessPoint', descending: true)
+        .get();
+
+    List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+    int userRank = 0;
+
+    for (int i = 0; i < documents.length; i++) {
+      String documentUserId = documents[i].id;
+
+      if (documentUserId == userId) {
+        userRank = i + 1;
+        break;
+      }
+    }
+
+    return userRank;
   }
 }
