@@ -46,4 +46,46 @@ class UserDataController {
 
     return userRank;
   }
+
+  Future<void> updateDailySuccessPoint(
+      String userId,
+      String date,
+      int hydrationLevel,
+      int exerciseDuration,
+      int calorieCount,
+      int sleepDuration) async {
+    try {
+      final DocumentReference userRef =
+          firestore.collection('users').doc(userId);
+      final DocumentReference successPointRef =
+          userRef.collection('uDailysuccesspoint').doc(date);
+
+      final DocumentSnapshot successPointSnapshot = await successPointRef.get();
+      if (successPointSnapshot.exists) {
+        final Map<String, dynamic> successPointData =
+            successPointSnapshot.data() as Map<String, dynamic>;
+
+        final int hydrationPoint = hydrationLevel >= 2000 ? 1 : 0;
+        final int exercisePoint = exerciseDuration >= 30 ? 1 : 0;
+        final int caloriePoint = calorieCount <= 2000 ? 1 : 0;
+        final int sleepPoint = sleepDuration >= 7 ? 1 : 0;
+        final int successPoint =
+            hydrationPoint + exercisePoint + caloriePoint + sleepPoint;
+
+        successPointData['uHydrationLevel'] = hydrationLevel;
+        successPointData['uHydrationPoint'] = hydrationPoint;
+        successPointData['uExerciseDuration'] = exerciseDuration;
+        successPointData['uExercisePoint'] = exercisePoint;
+        successPointData['uCalorieCount'] = calorieCount;
+        successPointData['uCaloriePoint'] = caloriePoint;
+        successPointData['uSleepDuration'] = sleepDuration;
+        successPointData['uSleepPoint'] = sleepPoint;
+        successPointData['uSuccessPoint'] = successPoint;
+
+        await successPointRef.update(successPointData);
+      }
+    } catch (e) {
+      print('Error updating daily success point: $e');
+    }
+  }
 }
