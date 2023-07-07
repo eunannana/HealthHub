@@ -41,6 +41,7 @@ dependencies:
   validators: ^3.0.0
   cloud_firestore: ^4.8.1
   intl: ^0.18.1
+  dropdown_search: ^2.0.0
 
 
 # Google Sign In
