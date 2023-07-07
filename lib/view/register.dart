@@ -42,6 +42,7 @@ class _RegisterViewState extends State<RegisterView> {
                     decoration: InputDecoration(
                       labelText: 'Name',
                       hintText: 'Enter your name',
+                      border: OutlineInputBorder(),
                     ),
                     onChanged: (value) {
                       name = value;
@@ -53,10 +54,12 @@ class _RegisterViewState extends State<RegisterView> {
                       return null;
                     },
                   ),
+                  const SizedBox(height: 16.0),
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: 'Email',
                       hintText: 'Enter your email',
+                      border: OutlineInputBorder(),
                     ),
                     onChanged: (value) {
                       email = value;
@@ -73,10 +76,12 @@ class _RegisterViewState extends State<RegisterView> {
                       return null;
                     },
                   ),
+                  const SizedBox(height: 16.0),
                   DropdownButtonFormField<String>(
                     decoration: InputDecoration(
                       labelText: 'Gender',
                       hintText: 'Select your gender',
+                      border: OutlineInputBorder(),
                     ),
                     value: gender,
                     onChanged: (value) {
@@ -95,41 +100,44 @@ class _RegisterViewState extends State<RegisterView> {
                       );
                     }).toList(),
                   ),
+                  const SizedBox(height: 16.0),
                   Row(
-  children: [
-    Text(
-      'Date of Birth',
-      style: TextStyle(
-        fontSize: 16,
-      ),
-    ),
-    SizedBox(width: 10),
-    IconButton(
-      onPressed: () {
-        selectDate(context);
-      },
-      icon: Icon(
-        Icons.calendar_today,
-        color: Theme.of(context).primaryColor,
-      ),
-    ),
-    TextButton(
-      onPressed: () {
-        selectDate(context);
-      },
-      child: Text(
-        dob != null
-            ? DateFormat('dd MMMM yyyy').format(DateTime.parse(dob!))
-            : 'Select Date of Birth',
-      ),
-    ),
-  ],
-),
-
+                    children: [
+                      Text(
+                        'Date of Birth',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      IconButton(
+                        onPressed: () {
+                          selectDate(context);
+                        },
+                        icon: Icon(
+                          Icons.calendar_today,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                      OutlinedButton(
+                        onPressed: () {
+                          selectDate(context);
+                        },
+                        child: Text(
+                          dob != null
+                              ? DateFormat('dd MMMM yyyy')
+                                  .format(DateTime.parse(dob!))
+                              : 'Select Date of Birth',
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16.0),
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: 'Password',
                       hintText: 'Enter your password',
+                      border: OutlineInputBorder(),
                       suffixIcon: IconButton(
                         onPressed: () {
                           setState(() {
@@ -157,10 +165,12 @@ class _RegisterViewState extends State<RegisterView> {
                       return null;
                     },
                   ),
+                  const SizedBox(height: 16.0),
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: 'Re-Password',
                       hintText: 'Re-enter your password',
+                      border: OutlineInputBorder(),
                       suffixIcon: IconButton(
                         onPressed: () {
                           setState(() {
@@ -216,7 +226,10 @@ class _RegisterViewState extends State<RegisterView> {
                                     TextButton(
                                       onPressed: () {
                                         Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const LoginPage()));
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const LoginPage()));
                                       },
                                       child: const Text('OK'),
                                     ),
@@ -226,7 +239,8 @@ class _RegisterViewState extends State<RegisterView> {
                             );
                           }
                         } catch (e) {
-                          if (e.toString()
+                          if (e
+                              .toString()
                               .contains('Email is already registered')) {
                             showDialog(
                               context: context,
