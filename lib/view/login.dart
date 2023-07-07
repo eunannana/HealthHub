@@ -38,6 +38,7 @@ class _LoginPageState extends State<LoginPage> {
                 controller: _emailController,
                 decoration: const InputDecoration(
                   labelText: 'Email',
+                  border: OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -51,6 +52,7 @@ class _LoginPageState extends State<LoginPage> {
                 controller: _passwordController,
                 decoration: InputDecoration(
                   labelText: 'Password',
+                  border: const OutlineInputBorder(),
                   suffixIcon: IconButton(
                     icon: Icon(
                       _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
