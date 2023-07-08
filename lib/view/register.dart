@@ -5,7 +5,7 @@ import 'package:healthhub/model/user_model.dart';
 import 'package:healthhub/view/login.dart';
 
 class RegisterView extends StatefulWidget {
-  RegisterView({Key? key}) : super(key: key);
+  const RegisterView({Key? key}) : super(key: key);
 
   @override
   State<RegisterView> createState() => _RegisterViewState();
@@ -27,9 +27,7 @@ class _RegisterViewState extends State<RegisterView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Register'),
-      ),
+      appBar: AppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -38,11 +36,27 @@ class _RegisterViewState extends State<RegisterView> {
               key: formkey,
               child: Column(
                 children: [
+                  const Text(
+                    'Welcome to HealthHub!',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Fill your data first!',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                   TextFormField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Name',
                       hintText: 'Enter your name',
                       border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.person),
                     ),
                     onChanged: (value) {
                       name = value;
@@ -56,10 +70,11 @@ class _RegisterViewState extends State<RegisterView> {
                   ),
                   const SizedBox(height: 16.0),
                   TextFormField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Email',
                       hintText: 'Enter your email',
                       border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.email),
                     ),
                     onChanged: (value) {
                       email = value;
@@ -78,7 +93,7 @@ class _RegisterViewState extends State<RegisterView> {
                   ),
                   const SizedBox(height: 16.0),
                   DropdownButtonFormField<String>(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Gender',
                       hintText: 'Select your gender',
                       border: OutlineInputBorder(),
@@ -103,13 +118,13 @@ class _RegisterViewState extends State<RegisterView> {
                   const SizedBox(height: 16.0),
                   Row(
                     children: [
-                      Text(
+                      const Text(
                         'Date of Birth',
                         style: TextStyle(
                           fontSize: 16,
                         ),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       IconButton(
                         onPressed: () {
                           selectDate(context);
@@ -137,7 +152,8 @@ class _RegisterViewState extends State<RegisterView> {
                     decoration: InputDecoration(
                       labelText: 'Password',
                       hintText: 'Enter your password',
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
+                      prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
                         onPressed: () {
                           setState(() {
@@ -170,7 +186,8 @@ class _RegisterViewState extends State<RegisterView> {
                     decoration: InputDecoration(
                       labelText: 'Re-Password',
                       hintText: 'Re-enter your password',
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
+                      prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
                         onPressed: () {
                           setState(() {
