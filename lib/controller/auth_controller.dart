@@ -123,4 +123,19 @@ class AuthController {
     }
     return null;
   }
+
+  Future<String?> getUserName(String uId) async {
+    try {
+      DocumentSnapshot userSnapshot = await usersCollection.doc(uId).get();
+
+      if (userSnapshot.exists) {
+        return userSnapshot['uName'];
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching user name: $e');
+      return null;
+    }
+  }
 }
