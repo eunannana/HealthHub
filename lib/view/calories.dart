@@ -1,27 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:healthhub/view/addCalories.dart';
+import 'package:healthhub/controller/userdata_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Calories extends StatefulWidget {
-  final List<String> data;
+  final String userId;
+  final String date;
+  final Function refreshData;
 
-  const Calories({Key? key, required this.data}) : super(key: key);
-
+  const Calories(
+      {Key? key,
+      required this.userId,
+      required this.refreshData,
+      required this.date})
+      : super(key: key);
   @override
   _CaloriesState createState() => _CaloriesState();
 }
 
 class _CaloriesState extends State<Calories> {
-  List<String> _caloriesData = [];
+  late String date;
+  Map<String, dynamic> userData = {};
+  late int hydrationLevel;
+  late int exerciseDuration;
+  late int calorieCount;
+  late int sleepDuration;
+  List<String> caloriesData = [];
+  Map<String, dynamic> caloriesDataMap = {};
+
+  double totalCalories = 0;
+  Future<void> fetchData() async {
+    caloriesDataMap =
+        await UserDataController().getDailyCaloriesData(widget.userId, date);
+
+    userData =
+        await UserDataController().getDailySuccessPoint(widget.userId, date);
+
+    hydrationLevel = userData['uHydrationLevel'] ?? 0;
+    exerciseDuration = userData['uExerciseDuration'] ?? 0;
+    calorieCount = userData['uCalorieCount'] ?? 0;
+    sleepDuration = userData['uSleepDuration'] ?? 0;
+
+    setState(() {
+      totalCalories = calorieCount.toDouble();
+      caloriesData = caloriesDataMap['caloriesData'] != null
+          ? List<String>.from(caloriesDataMap['caloriesData'])
+          : [];
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    _caloriesData = List.from(widget.data);
+    date = widget.date;
+    fetchData();
   }
 
   void _deleteData(int index) {
     setState(() {
-      _caloriesData.removeAt(index);
+      caloriesData.removeAt(index);
     });
   }
 
@@ -33,24 +70,49 @@ class _CaloriesState extends State<Calories> {
 
     if (result != null) {
       setState(() {
-        _caloriesData.add(result);
+        caloriesData.add(result);
       });
     }
   }
 
   double calculateTotalCalories() {
-    double totalCalories = 0;
-    for (String data in _caloriesData) {
+    double total = 0;
+    for (String data in caloriesData) {
       List<String> splittedData = data.split(' - ');
       String calories = splittedData[1].replaceAll(' cal', '');
       totalCalories += double.parse(calories);
     }
-    return totalCalories;
+    return total;
   }
 
-  void _saveTotalCalories(BuildContext context) {
-    
-    Navigator.pop(context); 
+  void _saveTotalCalories(BuildContext context) async {
+    await UserDataController().updateDailySuccessPoint(
+      widget.userId,
+      date,
+      hydrationLevel,
+      exerciseDuration,
+      calculateTotalCalories().toInt(),
+      sleepDuration,
+    );
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final DocumentReference userRef =
+        firestore.collection('users').doc(widget.userId);
+    final DocumentReference caloriesRef = userRef
+        .collection('uDailysuccesspoint')
+        .doc(date)
+        .collection('uCalories')
+        .doc('data');
+
+    await caloriesRef.set({
+      'caloriesData': caloriesData,
+    });
+     widget.refreshData();
+
+    Navigator.pop(context, true);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Total calories saved')),
+    );
   }
 
   @override
@@ -69,7 +131,8 @@ class _CaloriesState extends State<Calories> {
               children: [
                 Text(
                   'Total Calories: ${calculateTotalCalories().toStringAsFixed(1)}',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 ElevatedButton(
                   onPressed: () => _saveTotalCalories(context),
@@ -80,9 +143,9 @@ class _CaloriesState extends State<Calories> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: _caloriesData.length,
+              itemCount: caloriesData.length,
               itemBuilder: (BuildContext context, int index) {
-                String data = _caloriesData[index];
+                String data = caloriesData[index];
                 List<String> splittedData = data.split(' - ');
                 String food = splittedData[0];
                 String calories = splittedData[1];
@@ -92,7 +155,7 @@ class _CaloriesState extends State<Calories> {
                   direction: DismissDirection.endToStart,
                   background: Container(
                     color: Colors.red,
-                    child: Align(
+                    child: const Align(
                       alignment: Alignment.centerRight,
                       child: Padding(
                         padding: const EdgeInsets.only(right: 16.0),
@@ -112,7 +175,7 @@ class _CaloriesState extends State<Calories> {
                     child: ListTile(
                       title: Text(food),
                       subtitle: Text('$calories cal'),
-                      trailing: Icon(
+                      trailing: const Icon(
                         Icons.swipe_left_alt,
                         color: Color.fromARGB(70, 211, 67, 57),
                       ),
