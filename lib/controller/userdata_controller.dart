@@ -6,13 +6,84 @@ import 'package:firebase_auth/firebase_auth.dart';
 class UserDataController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  Future<Map<String, dynamic>> getDataBMI(String userId) async {
+    try {
+      final DocumentReference userRef =
+          firestore.collection('users').doc(userId);
+      final DocumentReference dataBMIRef =
+          userRef.collection('uBMI').doc('data');
+
+      final DocumentSnapshot dataBMISnapshot = await dataBMIRef.get();
+      if (dataBMISnapshot.exists) {
+        final Map<String, dynamic> dataBMI =
+            dataBMISnapshot.data() as Map<String, dynamic>;
+        return dataBMI;
+      }
+    } catch (e) {
+      print('Error getting BMI data: $e');
+    }
+
+    return {};
+  }
+
+  Future<void> updateBMI(
+    String userId,
+    int weight,
+    int height,
+    double bmiResult,
+    String bmiCategory,
+    int waterRecomendation,
+    int sleepRecomendation,
+    int exerciseRecomendation,
+    int calorieRecomendation,
+  ) async {
+    try {
+      final DocumentReference userRef =
+          firestore.collection('users').doc(userId);
+      final DocumentReference dataBMIRef =
+          userRef.collection('uBMI').doc('data');
+
+      final DocumentSnapshot dataBMISnapshot = await dataBMIRef.get();
+      if (!dataBMISnapshot.exists) {
+        final Map<String, dynamic> dataBMI = {
+          'uWeight': weight,
+          'uHeight': height,
+          'uBMIResult': bmiResult,
+          'uBMICategory': bmiCategory,
+          'uWaterRecomendation': waterRecomendation,
+          'uSleepRecomendation': sleepRecomendation,
+          'uExerciseRecomendation': exerciseRecomendation,
+          'uCalorieRecomendation': calorieRecomendation,
+        };
+
+        await dataBMIRef.set(dataBMI);
+      } else {
+        await dataBMIRef.update({
+          'uWeight': weight,
+          'uHeight': height,
+          'uBMIResult': bmiResult,
+          'uBMICategory': bmiCategory,
+          'uWaterRecomendation': waterRecomendation,
+          'uSleepRecomendation': sleepRecomendation,
+          'uExerciseRecomendation': exerciseRecomendation,
+          'uCalorieRecomendation': calorieRecomendation,
+        });
+      }
+    } catch (e) {
+      print('Error updating BMI data: $e');
+    }
+  }
+
   Future<Map<String, dynamic>> getDailyCaloriesData(
       String userId, String date) async {
     try {
       final DocumentReference userRef =
           firestore.collection('users').doc(userId);
-      final DocumentReference caloriesRef =
-          userRef.collection('uDailysuccesspoint').doc(date).collection('uCalories').doc('data');
+      final DocumentReference caloriesRef = userRef
+          .collection('uDailysuccesspoint')
+          .doc(date)
+          .collection('uCalories')
+          .doc('data');
 
       final DocumentSnapshot caloriesSnapshot = await caloriesRef.get();
       if (caloriesSnapshot.exists) {
@@ -26,7 +97,7 @@ class UserDataController {
 
     return {};
   }
-  
+
   Future<Map<String, dynamic>> getDailySuccessPoint(
       String userId, String date) async {
     try {
