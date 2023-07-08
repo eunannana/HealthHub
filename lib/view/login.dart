@@ -15,11 +15,9 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final AuthController _authController = AuthController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String _errorMessage = '';
-  bool _isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -28,76 +26,40 @@ class _LoginPageState extends State<LoginPage> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-             const Center(
-                    child: Text(
-                      'Welcome Back to HealthHub!',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+              const Center(
+                child: Text(
+                  'Welcome Back to HealthHub!',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
                   ),
-                  const SizedBox(height: 20),
-                  
+                ),
+              ),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.email),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  return null;
-                },
+                decoration: const InputDecoration(labelText: 'Email',
+                prefixIcon: Icon(Icons.email)),
               ),
               const SizedBox(height: 16.0),
               TextFormField(
                 controller: _passwordController,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(Icons.lock),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
-                    },
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
-                  }
-                  return null;
-                },
-                obscureText: !_isPasswordVisible,
+                obscureText: true,
+                decoration: const InputDecoration(labelText: 'Password',prefixIcon: Icon(Icons.lock)),
               ),
               const SizedBox(height: 16.0),
               ElevatedButton(
-                onPressed: _login,
+                onPressed: () => login(),
                 child: const Text('Login'),
               ),
-              if (_errorMessage.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: Text(
-                    _errorMessage,
-                    style: const TextStyle(
-                      color: Colors.red,
-                    ),
-                  ),
-                ),
+              const SizedBox(height: 8.0),
+              Text(
+                _errorMessage,
+                style: const TextStyle(color: Colors.red),
+              ),
               const SizedBox(height: 16.0),
               TextButton(
                 onPressed: () {
@@ -117,33 +79,34 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _login() async {
-    if (_formKey.currentState!.validate()) {
-      final String email = _emailController.text.trim();
-      final String password = _passwordController.text.trim();
+  Future<void> login() async {
+    final String email = _emailController.text.trim();
+    final String password = _passwordController.text.trim();
 
-      UserModel? loggedInUser =
-          await _authController.signInWithEmailAndPassword(email, password);
-      if (loggedInUser != null) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
+    if (email.isEmpty || password.isEmpty) {
+      setState(() {
+        _errorMessage = 'Email and password are required';
+      });
+      return;
+    }
+
+    final UserModel? user =
+        await _authController.signInWithEmailAndPassword(email, password);
+
+    if (user != null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
             builder: (context) => DashboardView(
-              username: loggedInUser.uName,
-              waterIntake: 0, // Set initial values for other properties
-              isExerciseDone: false,
-              calorieCount: 0,
-              isSleepTracked: false,
-              isSick: false,
-              globalRank: 0,
-            ),
-          ),
-        );
-      } else {
-        setState(() {
-          _errorMessage = 'Invalid email or password';
-        });
-      }
+                  userId: user.uId,
+                  bmiCategory: '',
+                  bmiResult: '',
+                )),
+      );
+    } else {
+      setState(() {
+        _errorMessage = 'Invalid email or password';
+      });
     }
   }
 }
