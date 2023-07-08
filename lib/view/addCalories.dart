@@ -71,12 +71,11 @@ class _AddCaloriesState extends State<AddCalories> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Replace the DropdownButtonFormField with DropdownSearch
             DropdownSearch<String>(
               mode: Mode.MENU, showClearButton: true,
               clearButton: const Icon(Icons.clear, size: Checkbox.width),
               showSelectedItems: true,
-              
+
               items: _foods.map((food) => food.food).toList(),
               onChanged: _calculateCalories,
               selectedItem: _selectedFood,
@@ -86,7 +85,6 @@ class _AddCaloriesState extends State<AddCalories> {
                 labelText: "Food/Beverage",
               ),
             ),
-
             const SizedBox(height: 16.0),
             Row(
               children: [
