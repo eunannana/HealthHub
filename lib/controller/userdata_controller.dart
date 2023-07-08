@@ -1,10 +1,32 @@
 // ignore_for_file: avoid_print
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class UserDataController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  Future<Map<String, dynamic>> getDailyCaloriesData(
+      String userId, String date) async {
+    try {
+      final DocumentReference userRef =
+          firestore.collection('users').doc(userId);
+      final DocumentReference caloriesRef =
+          userRef.collection('uDailysuccesspoint').doc(date).collection('uCalories').doc('data');
+
+      final DocumentSnapshot caloriesSnapshot = await caloriesRef.get();
+      if (caloriesSnapshot.exists) {
+        final Map<String, dynamic> caloriesData =
+            caloriesSnapshot.data() as Map<String, dynamic>;
+        return caloriesData;
+      }
+    } catch (e) {
+      print('Error getting daily calories: $e');
+    }
+
+    return {};
+  }
+  
   Future<Map<String, dynamic>> getDailySuccessPoint(
       String userId, String date) async {
     try {
