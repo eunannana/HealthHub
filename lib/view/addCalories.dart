@@ -86,19 +86,7 @@ class _AddCaloriesState extends State<AddCalories> {
                 labelText: "Food/Beverage",
               ),
             ),
-            // DropdownButtonFormField<String>(
-            //   value: _selectedFood,
-            //   onChanged: _calculateCalories,
-            //   items: _foods.map<DropdownMenuItem<String>>((food) {
-            //     return DropdownMenuItem<String>(
-            //       value: food.food,
-            //       child: Text(food.food),
-            //     );
-            //   }).toList(),
-            //   decoration: const InputDecoration(
-            //     labelText: 'Food/Beverage',
-            //   ),
-            // ),
+
             const SizedBox(height: 16.0),
             Row(
               children: [
