@@ -1,195 +1,214 @@
 import 'package:healthhub/view/login.dart';
-import 'package:healthhub/view/register.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:healthhub/controller/auth_controller.dart';
+import 'package:healthhub/controller/userdata_controller.dart';
+import 'package:healthhub/view/target.dart';
+import 'package:healthhub/view/calories.dart';
+import 'package:healthhub/view/sleep.dart';
 
-class DashboardView extends StatelessWidget {
-  final String username;
-  final int waterIntake;
-  final bool isExerciseDone;
-  final int calorieCount;
-  final bool isSleepTracked;
-  final bool isSick;
-  final int globalRank;
+class DashboardView extends StatefulWidget {
+  final String userId;
+  final String bmiResult;
+  final String bmiCategory;
 
   const DashboardView({
     Key? key,
-    required this.username,
-    required this.waterIntake,
-    required this.isExerciseDone,
-    required this.calorieCount,
-    required this.isSleepTracked,
-    required this.isSick,
-    required this.globalRank,
+    required this.userId,
+    required this.bmiResult,
+    required this.bmiCategory,
   }) : super(key: key);
 
   @override
+  State<DashboardView> createState() => _DashboardViewState();
+}
+
+class _DashboardViewState extends State<DashboardView> {
+  String? username;
   Widget build(BuildContext context) {
+    String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
     String formattedDate =
         DateFormat('EEEE, d MMMM yyyy').format(DateTime.now());
+    Map<String, dynamic> dailySuccessPoint = {};
+    Map<String, dynamic> userDataBMI = {};
+    int? globalRank;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('HealthHub'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () =>
-                logout(context),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Hello, $username!',
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    @override
+    void initState() {
+      super.initState();
+      fetchData();
+    }
+
+    Future<void> fetchData() async {
+      username = await AuthController().getUserName(widget.userId);
+
+      dailySuccessPoint = await UserDataController()
+          .getDailySuccessPoint(widget.userId, currentDate);
+
+      userDataBMI = await UserDataController().getDataBMI(widget.userId);
+
+      globalRank = await UserDataController().getGlobalRank(widget.userId);
+
+      setState(() {});
+    }
+
+    Future<void> refreshData() async {
+      await fetchData();
+    }
+
+    @override
+    Widget build(BuildContext context) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('HealthHub'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.logout),
+              onPressed: () => logout(context),
             ),
-            const SizedBox(height: 8),
-            Text(
-              formattedDate,
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 16),
-            buildWaterIntakeCard(),
-            buildExerciseCard(),
-            buildCalorieCountCard(),
-            buildSleepTrackingCard(),
-            // buildSickOptionsCard(),
-            buildGlobalRankCard(),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget buildWaterIntakeCard() {
-    bool isWaterIntakeMet = waterIntake >= 2000;
-    bool isWaterIntakeGoalMet = isWaterIntakeMet;
-    int waterIntakeGoal = 2000;
-
-    return Card(
-      child: ListTile(
-        title: const Text('Kadar Hidrasi'),
-        subtitle: Text('$waterIntake ml / $waterIntakeGoal ml'),
-        trailing: Icon(
-          isWaterIntakeMet ? Icons.check_circle : Icons.cancel,
-          color: isWaterIntakeMet ? Colors.green : Colors.red,
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Welcome, $username!',
+                style:
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                formattedDate,
+                style: const TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 16),
+              buildBMIResultCard(),
+              buildWaterIntakeCard(),
+              buildExerciseCard(),
+              buildCalorieCountCard(),
+              buildSleepTrackingCard(),
+              buildGlobalRankCard(),
+            ],
+          ),
         ),
-        leading: isWaterIntakeGoalMet
-            ? const Icon(Icons.star, color: Colors.yellow)
-            : null,
-      ),
-    );
-  }
+      );
+    }
 
-  Widget buildExerciseCard() {
-    bool isExerciseGoalMet = isExerciseDone;
-    // bool isExerciseGoal = true;
-
-    return Card(
-      child: ListTile(
-        title: const Text('Exercise'),
-        // subtitle: Text(isExerciseGoal ? 'Selesai' : 'Belum selesai'),
-        trailing: Icon(
-          isExerciseGoalMet ? Icons.check_circle : Icons.cancel,
-          color: isExerciseGoalMet ? Colors.green : Colors.red,
+    Widget buildBMIResultCard() {
+      double? bmi = userDataBMI['uBMIResult'];
+      String? bmiCategory = userDataBMI['uBMICategory'];
+      return Card(
+        child: InkWell(
+          onTap: () async {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    TargetPage(userId: widget.userId, refreshData: refreshData),
+              ),
+            );
+            await fetchData();
+          },
+          child: ListTile(
+            title: const Text('BMI Result'),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Result: ${bmi ?? 'no bmi data'}'),
+                Text('Category: ${bmiCategory ?? 'no bmi data'}'),
+              ],
+            ),
+          ),
         ),
-        leading: isExerciseGoalMet
-            ? const Icon(Icons.star, color: Colors.yellow)
-            : null,
-      ),
-    );
-  }
+      );
+    }
 
-  Widget buildCalorieCountCard() {
-    bool isCalorieCountMet = calorieCount <= 2000;
-    bool isCalorieCountGoalMet = isCalorieCountMet;
-    int calorieCountGoal = 2000;
+    Widget buildExerciseCard() {}
+    Widget buildWaterIntakeCard() {}
 
-    return Card(
-      child: ListTile(
-        title: const Text('Menghitung Kalori Makanan'),
-        subtitle: Text('$calorieCount kcal / $calorieCountGoal kcal'),
-        trailing: Icon(
-          isCalorieCountMet ? Icons.check_circle : Icons.cancel,
-          color: isCalorieCountMet ? Colors.green : Colors.red,
+    Widget buildCalorieCountCard() {
+      int calorieCountGoal = userDataBMI['uCalorieRecomendation'] ?? 2000;
+      int? calorieCount = dailySuccessPoint['uCalorieCount'];
+      bool isCalorieCountMet =
+          calorieCount != null && calorieCount <= calorieCountGoal;
+      bool isCalorieCountGoalMet = isCalorieCountMet;
+
+      return Card(
+          child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Calories(
+                  userId: widget.userId,
+                  date: currentDate,
+                  refreshData: refreshData),
+            ),
+          );
+        },
+        child: ListTile(
+          title: const Text('Calories'),
+          subtitle: Text('${calorieCount ?? 0} cal / $calorieCountGoal cal'),
+          trailing: Icon(
+            isCalorieCountMet ? Icons.check_circle : Icons.cancel,
+            color: isCalorieCountMet ? Colors.green : Colors.red,
+          ),
+          leading: isCalorieCountGoalMet
+              ? const Icon(Icons.star, color: Colors.yellow)
+              : null,
         ),
-        leading: isCalorieCountGoalMet
-            ? const Icon(Icons.star, color: Colors.yellow)
-            : null,
-      ),
-    );
-  }
+      ));
+    }
 
-  Widget buildSleepTrackingCard() {
-    bool isSleepTrackingMet = isSleepTracked;
-    bool isSleepTrackingGoalMet = isSleepTrackingMet;
-    // bool isSleepTrackingGoal = true;
+    Widget buildSleepTrackingCard() {
+      int sleepDurationGoal = 360;
+      int? sleepDuration = dailySuccessPoint['uSleepDuration'];
+      bool isSleepDurationMet =
+          sleepDuration != null && sleepDuration >= sleepDurationGoal;
+      bool isSleepDurationGoalMet = isSleepDurationMet;
 
-    return Card(
-      child: ListTile(
-        title: const Text('Tracking Pola Tidur'),
-        // subtitle: Text(isSleepTrackingGoal ? 'Terkonfirmasi' : 'Belum terkonfirmasi'),
-        trailing: Icon(
-          isSleepTrackingMet ? Icons.check_circle : Icons.cancel,
-          color: isSleepTrackingMet ? Colors.green : Colors.red,
+      return Card(
+          child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Sleep(
+                  userId: widget.userId,
+                  date: currentDate,
+                  refreshData: refreshData),
+            ),
+          );
+        },
+        child: ListTile(
+          title: const Text('Sleep Tracking'),
+          subtitle: Text(
+              '${sleepDuration ?? 0} minutes / $sleepDurationGoal minutes'),
+          trailing: Icon(
+            isSleepDurationGoalMet ? Icons.check_circle : Icons.cancel,
+            color: isSleepDurationGoalMet ? Colors.green : Colors.red,
+          ),
         ),
-        leading: isSleepTrackingGoalMet
-            ? const Icon(Icons.star, color: Colors.yellow)
-            : null,
-      ),
-    );
-  }
+      ));
+    }
 
-  // Widget buildSickOptionsCard() {
-  //   bool isSickOptionsMet = isSick;
-  //   bool isSickOptionsGoalMet = isSickOptionsMet;
-  //   // bool isSickOptionsGoal = true;
-
-  //   return Card(
-  //     child: ListTile(
-  //       title: const Text('Opsi Tambahan saat Sakit'),
-  //       // subtitle: Text(isSickOptionsGoal ? 'Tersedia' : 'Tidak tersedia'),
-  //       trailing: Icon(
-  //         isSickOptionsMet ? Icons.check_circle : Icons.cancel,
-  //         color: isSickOptionsMet ? Colors.green : Colors.red,
-  //       ),
-  //       leading: isSickOptionsGoalMet
-  //           ? const Icon(Icons.star, color: Colors.yellow)
-  //           : null,
-  //     ),
-  //   );
-  // }
-
-  Widget buildGlobalRankCard() {
-    bool isGlobalRankMet = globalRank <= 5;
-    bool isGlobalRankGoalMet = isGlobalRankMet;
-    // int globalRankGoal = 5;
-
-    return Card(
-      child: ListTile(
-        title: const Text('Global Rank'),
-        subtitle: isGlobalRankMet
-            ? const Text('Anda masuk ke dalam 5 orang sehat dari user lainnya')
-            : const Text(
-                'Anda belum masuk ke dalam 5 orang sehat dari user lainnya'),
-        trailing: Icon(
-          isGlobalRankMet ? Icons.check_circle : Icons.cancel,
-          color: isGlobalRankMet ? Colors.green : Colors.red,
+    Widget buildGlobalRankCard() {
+      return Card(
+        child: ListTile(
+          title: const Text('Global Rank'),
+          subtitle: Text('Rank $globalRank'),
+          trailing: const Icon(Icons.assessment),
         ),
-        leading: isGlobalRankGoalMet
-            ? const Icon(Icons.star, color: Colors.yellow)
-            : null,
-      ),
-    );
-  }
+      );
+    }
 
-  void logout(BuildContext context) {
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const LoginPage()));
+    void logout(BuildContext context) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+      );
+    }
   }
 }
