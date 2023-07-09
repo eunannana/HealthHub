@@ -42,10 +42,12 @@ class _RankPageState extends State<RankPage> {
                 final userName = userNamesWithPoints[index]['userName'];
                 final successPoint = userNamesWithPoints[index]['successPoint'];
                 final order = index + 1;
-                return ListTile(
-                  leading: Text(order.toString()),
-                  title: Text(userName),
-                  subtitle: Text('Success Point: $successPoint'),
+                return Card(
+                  child: ListTile(
+                    leading: Text(order.toString()),
+                    title: Text(userName),
+                    subtitle: Text('Success Point: $successPoint'),
+                  ),
                 );
               },
             ),
