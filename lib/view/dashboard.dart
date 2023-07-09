@@ -1,3 +1,4 @@
+import 'package:healthhub/view/exercise.dart';
 import 'package:healthhub/view/hydration.dart';
 import 'package:healthhub/view/login.dart';
 import 'package:flutter/material.dart';
@@ -84,6 +85,7 @@ class _DashboardViewState extends State<DashboardView> {
             const SizedBox(height: 16),
             buildBMIResultCard(),
             buildWaterIntakeCard(),
+            buildExerciseCard(),
             buildCalorieCountCard(),
             buildSleepTrackingCard(),
             buildGlobalRankCard(),
@@ -157,6 +159,42 @@ class _DashboardViewState extends State<DashboardView> {
         ),
       ),
     );
+  }
+  Widget buildExerciseCard() {
+    int uExerciseRecomendation = userDataBMI['uExerciseRecomendation'] ?? 1800;
+    int exerciseDurationGoal = uExerciseRecomendation;
+    int? exerciseDuration = dailySuccessPoint['uExerciseDuration'];
+    bool isExerciseGoalMet =
+        exerciseDuration != null && exerciseDuration >= exerciseDurationGoal;
+
+    return Card(
+        child: InkWell(
+      onTap: () async {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Exercise(
+              userId: widget.userId,
+              date: currentDate,
+              refreshData: refreshData,
+            ),
+          ),
+        );
+        await fetchData();
+      },
+      child: ListTile(
+        title: const Text('Exercise'),
+        subtitle: Text(
+            '${exerciseDuration ?? 0} seconds / $exerciseDurationGoal seconds'),
+        trailing: Icon(
+          isExerciseGoalMet ? Icons.check_circle : Icons.cancel,
+          color: isExerciseGoalMet ? Colors.green : Colors.red,
+        ),
+        leading: isExerciseGoalMet
+            ? const Icon(Icons.star, color: Colors.yellow)
+            : null,
+      ),
+    ));
   }
 
   Widget buildCalorieCountCard() {
