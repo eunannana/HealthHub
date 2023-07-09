@@ -276,7 +276,7 @@ class _DashboardViewState extends State<DashboardView> {
         },
         child: ListTile(
           title: const Text('Global Rank'),
-          subtitle: Text('Rank $globalRank'),
+          subtitle: Text('Click to see your rank'),
           trailing: const Icon(Icons.assessment),
         ),
       ),

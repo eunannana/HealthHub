@@ -65,7 +65,7 @@ class _CaloriesState extends State<Calories> {
   void _navigateToAddCalories(BuildContext context) async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AddCalories()),
+      MaterialPageRoute(builder: (context) => const AddCalories()),
     );
 
     if (result != null) {
@@ -80,7 +80,7 @@ class _CaloriesState extends State<Calories> {
     for (String data in caloriesData) {
       List<String> splittedData = data.split(' - ');
       String calories = splittedData[1].replaceAll(' cal', '');
-      totalCalories += double.parse(calories);
+      total += double.parse(calories);
     }
     return total;
   }
@@ -136,7 +136,7 @@ class _CaloriesState extends State<Calories> {
                 ),
                 ElevatedButton(
                   onPressed: () => _saveTotalCalories(context),
-                  child: Text('Save'),
+                  child: const Text('Save'),
                 ),
               ],
             ),
@@ -158,7 +158,7 @@ class _CaloriesState extends State<Calories> {
                     child: const Align(
                       alignment: Alignment.centerRight,
                       child: Padding(
-                        padding: const EdgeInsets.only(right: 16.0),
+                        padding: EdgeInsets.only(right: 16.0),
                         child: Icon(
                           Icons.delete,
                           color: Colors.white,

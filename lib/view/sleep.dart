@@ -32,7 +32,8 @@ class _SleepState extends State<Sleep> {
   DateTime? _sleepStartTime;
   DateTime? _sleepEndTime;
   Duration? _differenceTime;
-  Duration? _totalSleepDuration;
+  Duration? _totalSleepDuration = const Duration(hours: 0, minutes: 0);
+  final Duration _totalSleepDurationNull = const Duration(hours: 0, minutes: 0);
 
   @override
   Widget build(BuildContext context) {
