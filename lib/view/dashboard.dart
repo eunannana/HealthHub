@@ -1,3 +1,4 @@
+import 'package:healthhub/view/hydration.dart';
 import 'package:healthhub/view/login.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -82,6 +83,7 @@ class _DashboardViewState extends State<DashboardView> {
             ),
             const SizedBox(height: 16),
             buildBMIResultCard(),
+            buildWaterIntakeCard(),
             buildCalorieCountCard(),
             buildSleepTrackingCard(),
             buildGlobalRankCard(),
@@ -115,6 +117,43 @@ class _DashboardViewState extends State<DashboardView> {
               Text('Category: ${bmiCategory ?? 'no bmi data'}'),
             ],
           ),
+        ),
+      ),
+    );
+  }
+  Widget buildWaterIntakeCard() {
+    int uWaterRecomendation = userDataBMI['uWaterRecomendation'] ?? 2000;
+    int waterIntakeGoal = uWaterRecomendation;
+    int? hydrationLevel = dailySuccessPoint['uHydrationLevel'];
+    bool isWaterIntakeMet =
+        hydrationLevel != null && hydrationLevel >= waterIntakeGoal;
+    bool isWaterIntakeGoalMet = isWaterIntakeMet;
+
+    return Card(
+      child: InkWell(
+        onTap: () async {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Hydration(
+                userId: widget.userId,
+                date: currentDate,
+                refreshData: refreshData,
+              ),
+            ),
+          );
+          await fetchData();
+        },
+        child: ListTile(
+          title: const Text('Hydration'),
+          subtitle: Text('$hydrationLevel ml / $waterIntakeGoal ml'),
+          trailing: Icon(
+            isWaterIntakeMet ? Icons.check_circle : Icons.cancel,
+            color: isWaterIntakeMet ? Colors.green : Colors.red,
+          ),
+          leading: isWaterIntakeGoalMet
+              ? const Icon(Icons.star, color: Colors.yellow)
+              : null,
         ),
       ),
     );
