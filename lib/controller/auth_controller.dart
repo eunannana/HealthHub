@@ -63,7 +63,7 @@ class AuthController {
         return newUser;
       }
     } catch (e) {
-      print('Error registering user: $e');
+      throw e;
     }
     return null;
   }

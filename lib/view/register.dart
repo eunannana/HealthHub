@@ -231,6 +231,7 @@ class _RegisterViewState extends State<RegisterView> {
                             gender!,
                           );
                           if (registeredUser != null) {
+                            // ignore: use_build_context_synchronously
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
@@ -242,11 +243,8 @@ class _RegisterViewState extends State<RegisterView> {
                                   actions: <Widget>[
                                     TextButton(
                                       onPressed: () {
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const LoginPage()));
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
                                       },
                                       child: const Text('OK'),
                                     ),
