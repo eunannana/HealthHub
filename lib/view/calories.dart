@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:healthhub/view/addCalories.dart';
-import 'package:healthhub/controller/userdata_controller.dart';
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:healthhub/controller/userdata_controller.dart';
+import 'package:healthhub/view/addCalories.dart';
 
 class Calories extends StatefulWidget {
   final String userId;
@@ -29,92 +31,6 @@ class _CaloriesState extends State<Calories> {
   Map<String, dynamic> caloriesDataMap = {};
 
   double totalCalories = 0;
-  Future<void> fetchData() async {
-    caloriesDataMap =
-        await UserDataController().getDailyCaloriesData(widget.userId, date);
-
-    userData =
-        await UserDataController().getDailySuccessPoint(widget.userId, date);
-
-    hydrationLevel = userData['uHydrationLevel'] ?? 0;
-    exerciseDuration = userData['uExerciseDuration'] ?? 0;
-    calorieCount = userData['uCalorieCount'] ?? 0;
-    sleepDuration = userData['uSleepDuration'] ?? 0;
-
-    setState(() {
-      totalCalories = calorieCount.toDouble();
-      caloriesData = caloriesDataMap['caloriesData'] != null
-          ? List<String>.from(caloriesDataMap['caloriesData'])
-          : [];
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    date = widget.date;
-    fetchData();
-  }
-
-  void _deleteData(int index) {
-    setState(() {
-      caloriesData.removeAt(index);
-    });
-  }
-
-  void _navigateToAddCalories(BuildContext context) async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const AddCalories()),
-    );
-
-    if (result != null) {
-      setState(() {
-        caloriesData.add(result);
-      });
-    }
-  }
-
-  double calculateTotalCalories() {
-    double total = 0;
-    for (String data in caloriesData) {
-      List<String> splittedData = data.split(' - ');
-      String calories = splittedData[1].replaceAll(' cal', '');
-      total += double.parse(calories);
-    }
-    return total;
-  }
-
-  void _saveTotalCalories(BuildContext context) async {
-    await UserDataController().updateDailySuccessPoint(
-      widget.userId,
-      date,
-      hydrationLevel,
-      exerciseDuration,
-      calculateTotalCalories().toInt(),
-      sleepDuration,
-    );
-    final FirebaseFirestore firestore = FirebaseFirestore.instance;
-    final DocumentReference userRef =
-        firestore.collection('users').doc(widget.userId);
-    final DocumentReference caloriesRef = userRef
-        .collection('uDailysuccesspoint')
-        .doc(date)
-        .collection('uCalories')
-        .doc('data');
-
-    await caloriesRef.set({
-      'caloriesData': caloriesData,
-    });
-     widget.refreshData();
-
-    Navigator.pop(context, true);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Total calories saved')),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -191,6 +107,92 @@ class _CaloriesState extends State<Calories> {
         onPressed: () => _navigateToAddCalories(context),
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+  double calculateTotalCalories() {
+    double total = 0;
+    for (String data in caloriesData) {
+      List<String> splittedData = data.split(' - ');
+      String calories = splittedData[1].replaceAll(' cal', '');
+      total += double.parse(calories);
+    }
+    return total;
+  }
+
+  Future<void> fetchData() async {
+    caloriesDataMap =
+        await UserDataController().getDailyCaloriesData(widget.userId, date);
+
+    userData =
+        await UserDataController().getDailySuccessPoint(widget.userId, date);
+
+    hydrationLevel = userData['uHydrationLevel'] ?? 0;
+    exerciseDuration = userData['uExerciseDuration'] ?? 0;
+    calorieCount = userData['uCalorieCount'] ?? 0;
+    sleepDuration = userData['uSleepDuration'] ?? 0;
+
+    setState(() {
+      totalCalories = calorieCount.toDouble();
+      caloriesData = caloriesDataMap['caloriesData'] != null
+          ? List<String>.from(caloriesDataMap['caloriesData'])
+          : [];
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    date = widget.date;
+    fetchData();
+  }
+
+  void _deleteData(int index) {
+    setState(() {
+      caloriesData.removeAt(index);
+    });
+  }
+
+  void _navigateToAddCalories(BuildContext context) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const AddCalories()),
+    );
+
+    if (result != null) {
+      setState(() {
+        caloriesData.add(result);
+      });
+    }
+  }
+
+  void _saveTotalCalories(BuildContext context) async {
+    await UserDataController().updateDailySuccessPoint(
+      widget.userId,
+      date,
+      hydrationLevel,
+      exerciseDuration,
+      calculateTotalCalories().toInt(),
+      sleepDuration,
+    );
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final DocumentReference userRef =
+        firestore.collection('users').doc(widget.userId);
+    final DocumentReference caloriesRef = userRef
+        .collection('uDailysuccesspoint')
+        .doc(date)
+        .collection('uCalories')
+        .doc('data');
+
+    await caloriesRef.set({
+      'caloriesData': caloriesData,
+    });
+    widget.refreshData();
+
+    Navigator.pop(context, true);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Total calories saved')),
     );
   }
 }

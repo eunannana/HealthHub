@@ -1,10 +1,10 @@
 // ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
 
+import 'package:flutter/material.dart';
 import 'package:healthhub/controller/auth_controller.dart';
 import 'package:healthhub/model/user_model.dart';
 import 'package:healthhub/view/dashboard.dart';
 import 'package:healthhub/view/register.dart';
-import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -18,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String _errorMessage = '';
-   bool _obscurePassword = true;
+  bool _obscurePassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +43,10 @@ class _LoginPageState extends State<LoginPage> {
               TextFormField(
                 controller: _emailController,
                 decoration: const InputDecoration(
-                      hintText: 'Email',
-                prefixIcon: Icon(Icons.email)),
+                    hintText: 'Email', prefixIcon: Icon(Icons.email)),
               ),
               const SizedBox(height: 16.0),
-               TextFormField(
+              TextFormField(
                 controller: _passwordController,
                 obscureText: _obscurePassword,
                 decoration: InputDecoration(
@@ -55,7 +54,9 @@ class _LoginPageState extends State<LoginPage> {
                   prefixIcon: const Icon(Icons.lock),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                      _obscurePassword
+                          ? Icons.visibility
+                          : Icons.visibility_off,
                     ),
                     onPressed: () {
                       setState(() {
@@ -81,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => RegisterView(),
+                      builder: (context) => const RegisterView(),
                     ),
                   );
                 },

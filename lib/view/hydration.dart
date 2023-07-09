@@ -109,7 +109,6 @@ class _HydrationState extends State<Hydration> {
   }
 
   Future<void> fetchData() async {
-
     userData =
         await UserDataController().getDailySuccessPoint(widget.userId, date);
 

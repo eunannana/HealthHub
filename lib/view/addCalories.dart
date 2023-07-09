@@ -1,8 +1,10 @@
+// ignore_for_file: file_names
+
 import 'dart:convert';
 
-import 'package:healthhub/model/food_model.dart';
-import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:flutter/material.dart';
+import 'package:healthhub/model/food_model.dart';
 
 class AddCalories extends StatefulWidget {
   const AddCalories({Key? key}) : super(key: key);
@@ -16,50 +18,6 @@ class _AddCaloriesState extends State<AddCalories> {
   String? _selectedFood;
   double _calories = 0.0;
   List<Food> _foods = [];
-
-  @override
-  void initState() {
-    super.initState();
-    fetchData();
-  }
-
-  Future<void> fetchData() async {
-    // Load the JSON data from the assets
-    String jsonData = await DefaultAssetBundle.of(context)
-        .loadString('assets/foods_n_calories.json');
-    List<dynamic> data = jsonDecode(jsonData);
-
-    // Parse the JSON data into FoodItem objects
-    List<Food> foods = data.map((item) => Food.fromJson(item)).toList();
-
-    setState(() {
-      _foods = foods;
-    });
-  }
-
-  @override
-  void dispose() {
-    _caloriesController.dispose();
-    _foods.clear();
-    super.dispose();
-  }
-
-  void _calculateCalories(String? food) {
-    setState(() {
-      _selectedFood = food;
-
-      if (_selectedFood != null) {
-        // Find the selected food in the list and get its calories
-        Food selectedFoodItem =
-            _foods.firstWhere((item) => item.food == _selectedFood);
-        _calories = selectedFoodItem.calories;
-      } else {
-        _calories = 0.0;
-      }
-
-      _caloriesController.text = _calories.toString();
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,5 +84,49 @@ class _AddCaloriesState extends State<AddCalories> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _caloriesController.dispose();
+    _foods.clear();
+    super.dispose();
+  }
+
+  Future<void> fetchData() async {
+    // Load the JSON data from the assets
+    String jsonData = await DefaultAssetBundle.of(context)
+        .loadString('assets/foods_n_calories.json');
+    List<dynamic> data = jsonDecode(jsonData);
+
+    // Parse the JSON data into FoodItem objects
+    List<Food> foods = data.map((item) => Food.fromJson(item)).toList();
+
+    setState(() {
+      _foods = foods;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  void _calculateCalories(String? food) {
+    setState(() {
+      _selectedFood = food;
+
+      if (_selectedFood != null) {
+        // Find the selected food in the list and get its calories
+        Food selectedFoodItem =
+            _foods.firstWhere((item) => item.food == _selectedFood);
+        _calories = selectedFoodItem.calories;
+      } else {
+        _calories = 0.0;
+      }
+
+      _caloriesController.text = _calories.toString();
+    });
   }
 }

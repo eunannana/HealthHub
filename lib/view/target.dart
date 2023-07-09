@@ -1,8 +1,7 @@
-// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously, prefer_final_fields
 
-import 'package:healthhub/controller/userdata_controller.dart';
-import 'package:healthhub/view/dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:healthhub/controller/userdata_controller.dart';
 
 class TargetPage extends StatefulWidget {
   final String userId;
@@ -24,31 +23,6 @@ class _TargetPageState extends State<TargetPage> {
   int? sleepRecommendation;
   int? exerciseRecommendation;
   int? calorieRecommendation;
-
-  Future<void> fetchData() async {
-    userDataBMI = await UserDataController().getDataBMI(widget.userId);
-
-    setState(() {
-      String? weight = userDataBMI['uWeight'].toString();
-      String? height = userDataBMI['uHeight'].toString();
-      _weightController.text = weight;
-      _heightController.text = height;
-      bmiResult = userDataBMI['uBMIResult'] ?? 0;
-      bmiCategory = userDataBMI['uBMICategory'] ?? 'no data';
-      waterRecommendation = userDataBMI['uWaterRecomendation'] ?? 0;
-      sleepRecommendation = userDataBMI['uSleepRecomendation'] ?? 0;
-      exerciseRecommendation = userDataBMI['uExerciseRecomendation'] ?? 0;
-      calorieRecommendation = userDataBMI['uCalorieRecomendation'] ?? 0;
-    });
-    
-    
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    fetchData();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,9 +81,9 @@ class _TargetPageState extends State<TargetPage> {
     );
   }
 
-  Text buildBMIText() {
+  Text buildBMICategory() {
     return Text(
-      'BMI Result: $bmiResult',
+      'BMI Category: $bmiCategory',
       style: const TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.bold,
@@ -117,9 +91,9 @@ class _TargetPageState extends State<TargetPage> {
     );
   }
 
-  Text buildBMICategory() {
+  Text buildBMIText() {
     return Text(
-      'BMI Category: $bmiCategory',
+      'BMI Result: $bmiResult',
       style: const TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.bold,
@@ -173,7 +147,7 @@ class _TargetPageState extends State<TargetPage> {
         bmiCategory = 'Underweight';
         waterRecommendation = 2000;
         sleepRecommendation = 8;
-        exerciseRecommendation = 30;
+        exerciseRecommendation = 1800;
         calorieRecommendation = 2000;
         // waterRecommendation = 'Drink water 2000 ml in a day';
         // sleepRecommendation = 'Sleep 8 hours in a day';
@@ -183,7 +157,7 @@ class _TargetPageState extends State<TargetPage> {
         bmiCategory = 'Normal Weight';
         waterRecommendation = 2000;
         sleepRecommendation = 8;
-        exerciseRecommendation = 30;
+        exerciseRecommendation = 1800;
         calorieRecommendation = 2500;
         // waterRecommendation = 'Drink water 2000 ml in a day';
         // sleepRecommendation = 'Sleep 8 hours in a day';
@@ -193,7 +167,7 @@ class _TargetPageState extends State<TargetPage> {
         bmiCategory = 'Overweight';
         waterRecommendation = 2000;
         sleepRecommendation = 8;
-        exerciseRecommendation = 60;
+        exerciseRecommendation = 3600;
         calorieRecommendation = 2000;
         // waterRecommendation = 'Drink water 2000 ml in a day';
         // sleepRecommendation = 'Sleep 8 hours in a day';
@@ -203,7 +177,7 @@ class _TargetPageState extends State<TargetPage> {
         bmiCategory = 'Obese';
         waterRecommendation = 2000;
         sleepRecommendation = 8;
-        exerciseRecommendation = 60;
+        exerciseRecommendation = 3600;
         calorieRecommendation = 1500;
         // waterRecommendation = 'Drink water 2000 ml in a day';
         // sleepRecommendation = 'Sleep 8 hours in a day';
@@ -211,6 +185,29 @@ class _TargetPageState extends State<TargetPage> {
         // calorieRecommendation = 'Eat 1500 calories in a day';
       }
     });
+  }
+
+  Future<void> fetchData() async {
+    userDataBMI = await UserDataController().getDataBMI(widget.userId);
+
+    setState(() {
+      String? weight = userDataBMI['uWeight'].toString();
+      String? height = userDataBMI['uHeight'].toString();
+      _weightController.text = weight;
+      _heightController.text = height;
+      bmiResult = userDataBMI['uBMIResult'] ?? 0;
+      bmiCategory = userDataBMI['uBMICategory'] ?? 'no data';
+      waterRecommendation = userDataBMI['uWaterRecomendation'] ?? 0;
+      sleepRecommendation = userDataBMI['uSleepRecomendation'] ?? 0;
+      exerciseRecommendation = userDataBMI['uExerciseRecomendation'] ?? 0;
+      calorieRecommendation = userDataBMI['uCalorieRecomendation'] ?? 0;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
   }
 
   void saveData() async {

@@ -1,8 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api, avoid_print, use_build_context_synchronously
 
-import 'package:healthhub/controller/userdata_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:healthhub/controller/userdata_controller.dart';
 
 class Sleep extends StatefulWidget {
   final String userId;
@@ -66,7 +65,7 @@ class _SleepState extends State<Sleep> {
               child: Text(_isSleeping ? 'Wake up' : 'Sleep'),
             ),
             const SizedBox(height: 32.0),
-            if (_totalSleepDuration != null)
+            if (_totalSleepDuration != _totalSleepDurationNull)
               Text(
                 'I have already slept for ${_formatTime(_totalSleepDuration!)}',
                 style: const TextStyle(
@@ -92,7 +91,6 @@ class _SleepState extends State<Sleep> {
   }
 
   Future<void> fetchData() async {
-
     userData =
         await UserDataController().getDailySuccessPoint(widget.userId, date);
 
@@ -110,7 +108,6 @@ class _SleepState extends State<Sleep> {
     setState(() {
       _totalSleepDuration = intToDuration(sleepDuration);
       print('_totalSleepDuration = $_totalSleepDuration');
-      
     });
   }
 
@@ -150,7 +147,7 @@ class _SleepState extends State<Sleep> {
 
   void _saveSleepData() async {
     if (_isSleeping || _totalSleepDuration == null) {
-      return; 
+      return;
     }
 
     int sleepDurationInMinutes = _totalSleepDuration!.inMinutes;

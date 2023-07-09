@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:healthhub/controller/auth_controller.dart';
 import 'package:healthhub/model/user_model.dart';
-import 'package:healthhub/view/login.dart';
+import 'package:intl/intl.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);

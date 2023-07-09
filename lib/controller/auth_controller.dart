@@ -63,81 +63,11 @@ class AuthController {
         return newUser;
       }
     } catch (e) {
-      throw e;
+      rethrow;
     }
     return null;
   }
 
-  Future<UserModel?> signInWithEmailAndPassword(
-      String email, String password) async {
-    try {
-      final UserCredential userCredential = await auth
-          .signInWithEmailAndPassword(email: email, password: password);
-      final User? user = userCredential.user;
-
-      if (user != null) {
-        final DocumentSnapshot snapshot =
-            await usersCollection.doc(user.uid).get();
-
-        if (snapshot.exists) {
-          final UserModel loggedInUser =
-              UserModel.fromMap(snapshot.data() as Map<String, dynamic>);
-
-          final DateTime now = DateTime.now();
-          final String formattedDate =
-              '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
-
-          final DocumentSnapshot dailySuccessPointSnapshot =
-              await usersCollection
-                  .doc(loggedInUser.uId)
-                  .collection('uDailysuccesspoint')
-                  .doc(formattedDate)
-                  .get();
-
-          if (!dailySuccessPointSnapshot.exists) {
-            // Inisialisasi daily success point dengan data kosong
-            final Map<String, dynamic> initialSuccessPoint = {
-              'uHydrationLevel': 0,
-              'uHydrationPoint': 0,
-              'uExerciseDuration': 0,
-              'uExercisePoint': 0,
-              'uCalorieCount': 0,
-              'uCaloriePoint': 0,
-              'uSleepDuration': 0,
-              'uSleepPoint': 0,
-              'uSuccessPoint': 0,
-            };
-
-            await usersCollection
-                .doc(loggedInUser.uId)
-                .collection('uDailysuccesspoint')
-                .doc(formattedDate)
-                .set(initialSuccessPoint);
-          }
-
-          return loggedInUser;
-        }
-      }
-    } catch (e) {
-      print('Error logging in: $e');
-    }
-    return null;
-  }
-
-  Future<String?> getUserName(String uId) async {
-    try {
-      DocumentSnapshot userSnapshot = await usersCollection.doc(uId).get();
-
-      if (userSnapshot.exists) {
-        return userSnapshot['uName'];
-      } else {
-        return null;
-      }
-    } catch (e) {
-      print('Error fetching user name: $e');
-      return null;
-    }
-  }
   Future<List<String>> getAllUserNames() async {
     try {
       final QuerySnapshot snapshot = await usersCollection.get();
@@ -194,5 +124,76 @@ class AuthController {
       print('Error fetching user names with points: $e');
       return [];
     }
+  }
+
+  Future<String?> getUserName(String uId) async {
+    try {
+      DocumentSnapshot userSnapshot = await usersCollection.doc(uId).get();
+
+      if (userSnapshot.exists) {
+        return userSnapshot['uName'];
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching user name: $e');
+      return null;
+    }
+  }
+
+  Future<UserModel?> signInWithEmailAndPassword(
+      String email, String password) async {
+    try {
+      final UserCredential userCredential = await auth
+          .signInWithEmailAndPassword(email: email, password: password);
+      final User? user = userCredential.user;
+
+      if (user != null) {
+        final DocumentSnapshot snapshot =
+            await usersCollection.doc(user.uid).get();
+
+        if (snapshot.exists) {
+          final UserModel loggedInUser =
+              UserModel.fromMap(snapshot.data() as Map<String, dynamic>);
+
+          final DateTime now = DateTime.now();
+          final String formattedDate =
+              '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+
+          final DocumentSnapshot dailySuccessPointSnapshot =
+              await usersCollection
+                  .doc(loggedInUser.uId)
+                  .collection('uDailysuccesspoint')
+                  .doc(formattedDate)
+                  .get();
+
+          if (!dailySuccessPointSnapshot.exists) {
+            // Inisialisasi daily success point dengan data kosong
+            final Map<String, dynamic> initialSuccessPoint = {
+              'uHydrationLevel': 0,
+              'uHydrationPoint': 0,
+              'uExerciseDuration': 0,
+              'uExercisePoint': 0,
+              'uCalorieCount': 0,
+              'uCaloriePoint': 0,
+              'uSleepDuration': 0,
+              'uSleepPoint': 0,
+              'uSuccessPoint': 0,
+            };
+
+            await usersCollection
+                .doc(loggedInUser.uId)
+                .collection('uDailysuccesspoint')
+                .doc(formattedDate)
+                .set(initialSuccessPoint);
+          }
+
+          return loggedInUser;
+        }
+      }
+    } catch (e) {
+      print('Error logging in: $e');
+    }
+    return null;
   }
 }

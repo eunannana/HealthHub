@@ -6,7 +6,6 @@ class UserModel {
   String uId;
   String uDateOfBirth;
   String uGender;
-  
 
   UserModel({
     required this.uName,

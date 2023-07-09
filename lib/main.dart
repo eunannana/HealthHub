@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:healthhub/view/register.dart';
-import 'package:healthhub/view/login.dart';
 import 'package:healthhub/view/splash.dart';
 
 Future main() async{
@@ -19,7 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 225, 125, 25)),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 225, 125, 25)),
         useMaterial3: true,
       ),
       home: const SplashScreen(),

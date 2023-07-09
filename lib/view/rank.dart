@@ -3,15 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:healthhub/controller/auth_controller.dart';
 
-class UserRank {
-  final String userId;
-  final int rank;
-
-  UserRank(this.userId, this.rank);
-}
-
 class RankPage extends StatefulWidget {
-  
   final String userId;
 
   const RankPage({
@@ -22,22 +14,16 @@ class RankPage extends StatefulWidget {
   _RankPageState createState() => _RankPageState();
 }
 
+class UserRank {
+  final String userId;
+  final int rank;
+
+  UserRank(this.userId, this.rank);
+}
+
 class _RankPageState extends State<RankPage> {
   String? username;
   List<Map<String, dynamic>> userNamesWithPoints = [];
-
-  @override
-  void initState() {
-    super.initState();
-    fetchRanks();
-  }
-
-  Future<void> fetchRanks() async {
-    
-    username = await AuthController().getUserName(widget.userId);
-    userNamesWithPoints = await AuthController().getAllUserNamesWithPoints();
-    setState(() {});
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,5 +53,17 @@ class _RankPageState extends State<RankPage> {
         ],
       ),
     );
+  }
+
+  Future<void> fetchRanks() async {
+    username = await AuthController().getUserName(widget.userId);
+    userNamesWithPoints = await AuthController().getAllUserNamesWithPoints();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchRanks();
   }
 }
