@@ -34,7 +34,7 @@ class _TargetPageState extends State<TargetPage> {
       _weightController.text = weight;
       _heightController.text = height;
       bmiResult = userDataBMI['uBMIResult'] ?? 0;
-      bmiCategory = userDataBMI['uBMICategory'] ?? '';
+      bmiCategory = userDataBMI['uBMICategory'] ?? 'no data';
       waterRecommendation = userDataBMI['uWaterRecomendation'] ?? 0;
       sleepRecommendation = userDataBMI['uSleepRecomendation'] ?? 0;
       exerciseRecommendation = userDataBMI['uExerciseRecomendation'] ?? 0;
@@ -118,7 +118,6 @@ class _TargetPageState extends State<TargetPage> {
   }
 
   Text buildBMICategory() {
-    String bmiCategory = userDataBMI['uBMICategory'] ?? 'no data';
     return Text(
       'BMI Category: $bmiCategory',
       style: const TextStyle(

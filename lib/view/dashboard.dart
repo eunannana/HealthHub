@@ -2,6 +2,7 @@ import 'package:healthhub/view/exercise.dart';
 import 'package:healthhub/view/hydration.dart';
 import 'package:healthhub/view/login.dart';
 import 'package:flutter/material.dart';
+import 'package:healthhub/view/rank.dart';
 import 'package:intl/intl.dart';
 import 'package:healthhub/controller/auth_controller.dart';
 import 'package:healthhub/controller/userdata_controller.dart';
@@ -265,10 +266,19 @@ class _DashboardViewState extends State<DashboardView> {
 
   Widget buildGlobalRankCard() {
     return Card(
-      child: ListTile(
-        title: const Text('Global Rank'),
-        subtitle: Text('Rank $globalRank'),
-        trailing: const Icon(Icons.assessment),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => RankPage(userId: widget.userId)),
+          );
+        },
+        child: ListTile(
+          title: const Text('Global Rank'),
+          subtitle: Text('Rank $globalRank'),
+          trailing: const Icon(Icons.assessment),
+        ),
       ),
     );
   }

@@ -1,4 +1,7 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
+import 'package:healthhub/controller/auth_controller.dart';
 
 class UserRank {
   final String userId;
@@ -8,12 +11,20 @@ class UserRank {
 }
 
 class RankPage extends StatefulWidget {
+  
+  final String userId;
+
+  const RankPage({
+    Key? key,
+    required this.userId,
+  }) : super(key: key);
   @override
   _RankPageState createState() => _RankPageState();
 }
 
 class _RankPageState extends State<RankPage> {
-  List<UserRank> ranks = [];
+  String? username;
+  List<Map<String, dynamic>> userNamesWithPoints = [];
 
   @override
   void initState() {
@@ -22,40 +33,38 @@ class _RankPageState extends State<RankPage> {
   }
 
   Future<void> fetchRanks() async {
-    // Simulate fetching ranks from database or API
-    await Future.delayed(Duration(seconds: 2));
-
-    // Dummy data for demonstration
-    List<UserRank> dummyRanks = [
-      UserRank('user1', 1),
-      UserRank('user2', 2),
-      UserRank('user3', 3),
-      UserRank('user4', 4),
-      UserRank('user5', 5),
-    ];
-
-    setState(() {
-      ranks = dummyRanks;
-    });
+    
+    username = await AuthController().getUserName(widget.userId);
+    userNamesWithPoints = await AuthController().getAllUserNamesWithPoints();
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Rank Page'),
+        title: const Text('Rank Page'),
       ),
-      body: Center(
-        child: ListView.builder(
-          itemCount: ranks.length,
-          itemBuilder: (context, index) {
-            UserRank userRank = ranks[index];
-            return ListTile(
-              leading: Text(userRank.rank.toString()),
-              title: Text('User ID: ${userRank.userId}'),
-            );
-          },
-        ),
+      body: Column(
+        children: [
+          Text('Name: $username'),
+          const SizedBox(height: 20),
+          Expanded(
+            child: ListView.builder(
+              itemCount: userNamesWithPoints.length,
+              itemBuilder: (context, index) {
+                final userName = userNamesWithPoints[index]['userName'];
+                final successPoint = userNamesWithPoints[index]['successPoint'];
+                final order = index + 1;
+                return ListTile(
+                  leading: Text(order.toString()),
+                  title: Text(userName),
+                  subtitle: Text('Success Point: $successPoint'),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
