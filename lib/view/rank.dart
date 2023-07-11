@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:healthhub/controller/auth_controller.dart';
+import 'package:healthhub/controller/userdata_controller.dart';
 
 class RankPage extends StatefulWidget {
   final String userId;
@@ -29,11 +30,18 @@ class _RankPageState extends State<RankPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Rank Page'),
+        title: const Text('HealthHub Rank'),
       ),
       body: Column(
         children: [
-          Text('Name: $username'),
+          const SizedBox(height: 10),
+          Text(
+              'Name: $username',
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           const SizedBox(height: 20),
           Expanded(
             child: ListView.builder(
@@ -42,9 +50,40 @@ class _RankPageState extends State<RankPage> {
                 final userName = userNamesWithPoints[index]['userName'];
                 final successPoint = userNamesWithPoints[index]['successPoint'];
                 final order = index + 1;
+                IconData? badgeIcon;
+                Color? badgeColor;
+
+                if (order == 1) {
+                  badgeIcon = Icons.emoji_events;
+                  badgeColor = Colors.amber;
+                } else if (order == 2) {
+                  badgeIcon = Icons.emoji_events;
+                  badgeColor = Colors.grey;
+                } else if (order == 3) {
+                  badgeIcon = Icons.emoji_events;
+                  badgeColor = Colors.brown;
+                }
+                 final isSameUser = userName == username;
+
                 return Card(
+                  shape: isSameUser
+                      ? RoundedRectangleBorder(
+                          side: const BorderSide(
+                            color: Color.fromARGB(255, 234, 141, 54),
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.circular(8.0),
+                        )
+                      : null,
                   child: ListTile(
-                    leading: Text(order.toString()),
+                    leading: CircleAvatar(
+                      child: badgeIcon != null
+                          ? Icon(
+                              badgeIcon,
+                              color: badgeColor,
+                            )
+                          : Text(order.toString()),
+                    ),
                     title: Text(userName),
                     subtitle: Text('Success Point: $successPoint'),
                   ),
@@ -59,7 +98,7 @@ class _RankPageState extends State<RankPage> {
 
   Future<void> fetchRanks() async {
     username = await AuthController().getUserName(widget.userId);
-    userNamesWithPoints = await AuthController().getAllUserNamesWithPoints();
+    userNamesWithPoints = await UserDataController().getAllUserNamesWithPoints();
     setState(() {});
   }
 
