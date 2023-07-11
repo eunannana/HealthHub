@@ -4,6 +4,47 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserDataController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final CollectionReference usersCollection =
+      FirebaseFirestore.instance.collection('users');
+
+  Future<List<Map<String, dynamic>>> getAllUserNamesWithPoints() async {
+    try {
+      final QuerySnapshot snapshot = await usersCollection.get();
+      final List<Map<String, dynamic>> userNamesWithPoints = [];
+
+      for (final DocumentSnapshot doc in snapshot.docs) {
+        final String? userName = doc['uName'];
+
+        final QuerySnapshot successPointSnapshot = await usersCollection
+            .doc(doc.id)
+            .collection('uDailysuccesspoint')
+            .get();
+
+        int totalSuccessPoint = 0;
+        for (final DocumentSnapshot successPointDoc
+            in successPointSnapshot.docs) {
+          final int successPoint = successPointDoc['uSuccessPoint'] ?? 0;
+          totalSuccessPoint += successPoint;
+        }
+
+        if (userName != null) {
+          final Map<String, dynamic> userWithPoint = {
+            'userName': userName,
+            'successPoint': totalSuccessPoint,
+          };
+          userNamesWithPoints.add(userWithPoint);
+        }
+      }
+
+      userNamesWithPoints
+          .sort((a, b) => b['successPoint'].compareTo(a['successPoint']));
+
+      return userNamesWithPoints;
+    } catch (e) {
+      print('Error fetching user names with points: $e');
+      return [];
+    }
+  }
 
   Future<Map<String, dynamic>> getDailyCaloriesData(
       String userId, String date) async {
