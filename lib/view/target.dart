@@ -63,12 +63,33 @@ class _TargetPageState extends State<TargetPage> {
               const SizedBox(height: 8),
               buildBMICategory(),
               const SizedBox(height: 16),
-              const Text('Target Recommendations:'),
+              const Text(
+                'Target Recommendations:',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               const SizedBox(height: 8),
-              Text('Drink water $waterRecommendation ml in a day'),
-              Text('Sleep $sleepRecommendation hours in a day'),
-              Text('Exercise $exerciseRecommendation minutes in a day'),
-              Text('Eat $calorieRecommendation calories in a day'),
+              Text(
+                'Drink water $waterRecommendation ml in a day',
+                style: const TextStyle(fontSize: 15),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Sleep $sleepRecommendation hours in a day',
+                style: const TextStyle(fontSize: 15),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Exercise $exerciseRecommendation seconds in a day',
+                style: const TextStyle(fontSize: 15),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Eat $calorieRecommendation calories in a day',
+                style: const TextStyle(fontSize: 15),
+              ),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: saveData,
@@ -149,40 +170,24 @@ class _TargetPageState extends State<TargetPage> {
         sleepRecommendation = 8;
         exerciseRecommendation = 1800;
         calorieRecommendation = 2000;
-        // waterRecommendation = 'Drink water 2000 ml in a day';
-        // sleepRecommendation = 'Sleep 8 hours in a day';
-        // exerciseRecommendation = 'Exercise 30 minutes in a day';
-        // calorieRecommendation = 'Eat 2000 calories in a day';
       } else if (bmi >= 18.5 && bmi < 25) {
         bmiCategory = 'Normal Weight';
         waterRecommendation = 2000;
         sleepRecommendation = 8;
         exerciseRecommendation = 1800;
         calorieRecommendation = 2500;
-        // waterRecommendation = 'Drink water 2000 ml in a day';
-        // sleepRecommendation = 'Sleep 8 hours in a day';
-        // exerciseRecommendation = 'Exercise 30 minutes in a day';
-        // calorieRecommendation = 'Eat 2500 calories in a day';
       } else if (bmi >= 25 && bmi < 30) {
         bmiCategory = 'Overweight';
         waterRecommendation = 2000;
         sleepRecommendation = 8;
         exerciseRecommendation = 3600;
         calorieRecommendation = 2000;
-        // waterRecommendation = 'Drink water 2000 ml in a day';
-        // sleepRecommendation = 'Sleep 8 hours in a day';
-        // exerciseRecommendation = 'Exercise 60 minutes in a day';
-        // calorieRecommendation = 'Eat 2000 calories in a day';
       } else {
         bmiCategory = 'Obese';
         waterRecommendation = 2000;
         sleepRecommendation = 8;
         exerciseRecommendation = 3600;
         calorieRecommendation = 1500;
-        // waterRecommendation = 'Drink water 2000 ml in a day';
-        // sleepRecommendation = 'Sleep 8 hours in a day';
-        // exerciseRecommendation = 'Exercise 60 minutes in a day';
-        // calorieRecommendation = 'Eat 1500 calories in a day';
       }
     });
   }
@@ -218,7 +223,7 @@ class _TargetPageState extends State<TargetPage> {
         const SnackBar(content: Text('Please fill in all fields')),
       );
     }
-    // Save data BMI to database
+
     await UserDataController().updateBMI(
       widget.userId,
       weightInt,
